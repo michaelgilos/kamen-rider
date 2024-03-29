@@ -15,11 +15,11 @@ const {EXPO_PUBLIC_GOOGLE_MAPS_APIKEY} = process.env;
 
 type Props = NativeStackScreenProps<RootStackParamList, 'RideDetail'>;
 
-export const RideRequestScreen = (prop: Props) => {
+export const RideRequestScreen = ({route, navigation}: Props) => {
   const dispatch = useAppDispatch();
   const {getRideRequestById} = useRideRequests();
 
-  const {rideId} = prop.route.params;
+  const {rideId} = route.params;
   const rideRequest = getRideRequestById(rideId);
 
   const mapRef = React.useRef<MapView | null>(null);
@@ -32,6 +32,8 @@ export const RideRequestScreen = (prop: Props) => {
 
   const onDeclineButtonPress = () => {
     dispatch(declineRideRequest(rideId));
+
+    navigation.navigate('Home');
   };
 
   if (!rideRequest) {

@@ -36,7 +36,7 @@ const RideRequestMarkers = ({
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export const HomeScreen = ({navigation}: Props) => {
-  const {rideRequests} = useRideRequests();
+  const {pendingRideRequests} = useRideRequests();
 
   const [location, setLocation] = useState<LocationObject | undefined>();
 
@@ -83,7 +83,7 @@ export const HomeScreen = ({navigation}: Props) => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}>
-        <RideRequestMarkers data={rideRequests} onSelect={handleSelectRide} />
+        <RideRequestMarkers data={pendingRideRequests} onSelect={handleSelectRide} />
       </MapView>
     </View>
   );
