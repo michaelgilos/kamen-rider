@@ -1,33 +1,44 @@
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import * as Location from 'expo-location';
 import {LocationAccuracy, LocationObject} from 'expo-location';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {RootStackParamList} from '../navigation/RootStack';
 import {useGetAllRideRequests} from '../ride-request/hooks/useGetAllRideRequests';
 import {RideRequest} from '../types/RideRequest';
 
-const RideRequestMarkers = ({data = []}: {data: RideRequest[]}) => (
+const RideRequestMarkers = ({
+  data = [],
+  onSelect,
+}: {
+  data: RideRequest[];
+  onSelect: (item: RideRequest) => void;
+}) => (
   <>
-    {data.map(({id, status, pickupLocation}) => (
+    {data.map(ride => (
       <Marker
-        key={id}
+        key={ride.id}
         coordinate={{
-          latitude: pickupLocation.latitude,
-          longitude: pickupLocation.longitude,
+          latitude: ride.pickupLocation.latitude,
+          longitude: ride.pickupLocation.longitude,
         }}
+        onPress={() => onSelect(ride)}
         anchor={{x: 0.5, y: 0.5}}
         stopPropagation={true}
         tracksViewChanges={false}
-        title={status}
+        title={ride.status}
       />
     ))}
   </>
 );
 
-export const HomeScreen = () => {
-  const [location, setLocation] = useState<LocationObject | null>(null);
+type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
+export const HomeScreen = ({navigation}: Props) => {
   const rideRequests = useGetAllRideRequests();
+
+  const [location, setLocation] = useState<LocationObject | undefined>();
 
   useEffect(() => {
     (async () => {
@@ -44,6 +55,13 @@ export const HomeScreen = () => {
       setLocation(location);
     })();
   }, []);
+
+  const handleSelectRide = (rideInfo: RideRequest) => {
+    setTimeout(
+      () => navigation.navigate('RideDetail', {rideId: rideInfo.id}),
+      500,
+    ); //add slight delay for modal to show
+  };
 
   if (!location) {
     return <Text>Failed to load user location</Text>;
@@ -65,7 +83,7 @@ export const HomeScreen = () => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}>
-        <RideRequestMarkers data={rideRequests} />
+        <RideRequestMarkers data={rideRequests} onSelect={handleSelectRide} />
       </MapView>
     </View>
   );
@@ -78,5 +96,43 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: '100%',
+  },
+
+  // modal
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });
