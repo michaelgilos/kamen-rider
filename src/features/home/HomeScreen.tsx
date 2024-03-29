@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import * as Location from 'expo-location';
 import {LocationAccuracy, LocationObject} from 'expo-location';
 
@@ -42,8 +42,18 @@ export const HomeScreen = () => {
           longitude: location.coords.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
-        }}
-      />
+        }}>
+        <Marker
+          coordinate={{
+            latitude: 10.31995574882177,
+            longitude: 123.90318896421478,
+          }}
+          anchor={{x: 0.5, y: 0.5}}
+          stopPropagation={true}
+          tracksViewChanges={false}
+          title={'marker'}
+        />
+      </MapView>
     </View>
   );
 };
