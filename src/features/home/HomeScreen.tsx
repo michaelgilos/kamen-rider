@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import * as Location from 'expo-location';
 import {LocationAccuracy, LocationObject} from 'expo-location';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {useGetAllRideRequests} from '../ride-request/hooks/useGetAllRideRequests';
 import {RideRequest} from '../types/RideRequest';
 
 const RideRequestMarkers = ({data = []}: {data: RideRequest[]}) => (
@@ -26,24 +27,7 @@ const RideRequestMarkers = ({data = []}: {data: RideRequest[]}) => (
 export const HomeScreen = () => {
   const [location, setLocation] = useState<LocationObject | null>(null);
 
-  const rideMarkers: RideRequest[] = [
-    {
-      id: '1',
-      userId: '1',
-      driverId: null,
-      pickupLocation: {
-        latitude: 10.31995574882177,
-        longitude: 123.90318896421478,
-      },
-      destination: {
-        latitude: 10.296099600260172,
-        longitude: 123.89138715420836,
-      },
-      status: 'pending',
-      pickupTime: new Date(),
-      timestamp: new Date(),
-    },
-  ];
+  const rideRequests = useGetAllRideRequests();
 
   useEffect(() => {
     (async () => {
@@ -81,7 +65,7 @@ export const HomeScreen = () => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}>
-        <RideRequestMarkers data={rideMarkers} />
+        <RideRequestMarkers data={rideRequests} />
       </MapView>
     </View>
   );
