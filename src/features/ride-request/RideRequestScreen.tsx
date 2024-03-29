@@ -8,6 +8,7 @@ import {useAppDispatch} from '../state/hooks';
 import {
   acceptRideRequest,
   declineRideRequest,
+  updateRideRequestStatus,
 } from '../state/ride-requests/rideRequestSlice';
 import {useRideRequests} from './hooks/useRideRequests';
 
@@ -26,6 +27,8 @@ export const RideRequestScreen = ({route, navigation}: Props) => {
   const pickupRef = React.useRef<MapMarker | null>(null);
   const destinationRef = React.useRef<MapMarker | null>(null);
 
+  const [updateText, setUpdateText] = React.useState('START');
+
   const onAcceptButtonPress = () => {
     dispatch(acceptRideRequest(rideId));
   };
@@ -34,6 +37,33 @@ export const RideRequestScreen = ({route, navigation}: Props) => {
     dispatch(declineRideRequest(rideId));
 
     navigation.navigate('Home');
+  };
+
+  const onUpdateDelivery = () => {
+    if (!rideRequest) return;
+
+    if (rideRequest.status === 'accepted') {
+      setUpdateText('PICKED UP');
+
+      dispatch(
+        updateRideRequestStatus({id: rideRequest.id, status: 'picked-up'}),
+      );
+    }
+
+    if (rideRequest.status === 'picked-up') {
+      setUpdateText('DROPPED OFF');
+
+      dispatch(
+        updateRideRequestStatus({id: rideRequest.id, status: 'dropped-off'}),
+      );
+
+      destinationRef.current?.showCallout();
+    }
+
+    if (rideRequest.status === 'dropped-off') {
+      // may delete from db?
+      navigation.navigate('Home');
+    }
   };
 
   if (!rideRequest) {
@@ -51,7 +81,7 @@ export const RideRequestScreen = ({route, navigation}: Props) => {
         onMapReady={() => {
           mapRef.current?.fitToCoordinates(
             [rideRequest.pickupLocation, rideRequest.destination],
-            {edgePadding: {top: 100, bottom: 100, right: 0, left: 0}},
+            {edgePadding: {top: 100, bottom: 100, right: 100, left: 100}},
           );
           setTimeout(() => pickupRef.current?.showCallout(), 500);
         }}
@@ -87,10 +117,26 @@ export const RideRequestScreen = ({route, navigation}: Props) => {
         )}
       </MapView>
 
-      <View style={{flexDirection: 'row', gap: 10, marginTop: 10}}>
-        <Button onPress={onAcceptButtonPress} title="ACCEPT" color={'blue'} />
-        <Button onPress={onDeclineButtonPress} title="DECLINE" color={'red'} />
-      </View>
+      {rideRequest.status === 'pending' && (
+        <View style={{flexDirection: 'row', gap: 10, marginTop: 10}}>
+          <Button onPress={onAcceptButtonPress} title="ACCEPT" color={'blue'} />
+          <Button
+            onPress={onDeclineButtonPress}
+            title="DECLINE"
+            color={'red'}
+          />
+        </View>
+      )}
+
+      {rideRequest.status !== 'pending' && (
+        <View style={{flexDirection: 'row', gap: 10, marginTop: 10}}>
+          <Button
+            onPress={onUpdateDelivery}
+            title={updateText}
+            color={'green'}
+          />
+        </View>
+      )}
     </View>
   );
 };

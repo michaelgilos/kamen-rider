@@ -60,7 +60,7 @@ export const HomeScreen = ({navigation}: Props) => {
     setTimeout(
       () => navigation.navigate('RideDetail', {rideId: rideInfo.id}),
       500,
-    ); //add slight delay for modal to show
+    ); //add slight delay to complete animation
   };
 
   if (!location) {
