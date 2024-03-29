@@ -1,11 +1,19 @@
 import * as React from "react";
 import { View, StyleSheet } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
 export const HomeScreen = () => {
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} />
+      <MapView
+        style={styles.map}
+        showsUserLocation
+        loadingEnabled
+        zoomEnabled={true}
+        zoomTapEnabled={true}
+        maxZoomLevel={60}
+        provider={PROVIDER_GOOGLE}
+      />
     </View>
   );
 };
