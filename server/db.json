@@ -1,0 +1,68 @@
+{
+  "rides": [
+    {
+      "id": "tz4a98",
+      "userId": "user123",
+      "driverId": null,
+      "pickupLocation": {
+        "latitude": 10.31995574882177,
+        "longitude": 123.90318896421478
+      },
+      "destination": {
+        "latitude": 10.296099600260172,
+        "longitude": 123.89138715420836
+      },
+      "status": "pending",
+      "pickupTime": null,
+      "timestamp": null
+    },
+    {
+      "id": "xxat9s",
+      "userId": "user456",
+      "driverId": null,
+      "pickupLocation": {
+        "latitude": 10.308217454954267,
+        "longitude": 123.90185926590911
+      },
+      "destination": {
+        "latitude": 10.304544351663475,
+        "longitude": 123.89237440370785
+      },
+      "status": "pending",
+      "pickupTime": null,
+      "timestamp": null
+    },
+    {
+      "id": "9zmbrg",
+      "userId": "user777",
+      "driverId": null,
+      "pickupLocation": {
+        "latitude": 10.313622604537223,
+        "longitude": 123.87902746186012
+      },
+      "destination": {
+        "latitude": 10.296310757045323,
+        "longitude": 123.89147293254648
+      },
+      "status": "pending",
+      "pickupTime": null,
+      "timestamp": null
+    },
+    {
+      "id": "pfh0ha",
+      "userId": "user909",
+      "driverId": null,
+      "pickupLocation": {
+        "latitude": 10.290103876963473,
+        "longitude": 123.87078785297129
+      },
+      "destination": {
+        "latitude": 10.282376432232315,
+        "longitude": 123.88288961236582
+      },
+      "status": "pending",
+      "pickupTime": null,
+      "timestamp": null
+    }
+  ]
+}
