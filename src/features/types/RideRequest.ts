@@ -17,6 +17,6 @@ export type RideRequest = {
     | 'started'
     | 'picked-up'
     | 'dropped-off';
-  pickupTime: Date;
-  timestamp: Date;
+  pickupTime: Date | string;
+  timestamp: Date | string;
 };

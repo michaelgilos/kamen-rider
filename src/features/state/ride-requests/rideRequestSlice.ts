@@ -16,8 +16,8 @@ const sampleRide: RideRequest = {
     longitude: 123.89138715420836,
   },
   status: 'pending',
-  pickupTime: new Date(),
-  timestamp: new Date(),
+  pickupTime: new Date().toISOString(),
+  timestamp: new Date().toISOString(),
 };
 
 interface RideRequestState {
@@ -35,11 +35,21 @@ const slice = createSlice({
     setRideRequests: (state, {payload}: PayloadAction<RideRequest[]>) => {
       state.rideRequests = payload;
     },
+    declineRideRequest: (state, {payload}: PayloadAction<string>) => {
+      const idx = state.rideRequests.findIndex(ride => ride.id === payload);
+      state.rideRequests[idx].status = 'declined';
+    },
+    acceptRideRequest: (state, {payload}: PayloadAction<string>) => {
+      const idx = state.rideRequests.findIndex(ride => ride.id === payload);
+      state.rideRequests[idx].status = 'accepted';
+    },
   },
 });
 
-export const {setRideRequests} = slice.actions;
+export const {setRideRequests, declineRideRequest, acceptRideRequest} =
+  slice.actions;
 
-export const selectAllRides = (state: RootState) => state.rideRequests.rideRequests;
+export const selectAllRides = (state: RootState) =>
+  state.rideRequests.rideRequests;
 
 export const {reducer: rideRequestsReducer} = slice;

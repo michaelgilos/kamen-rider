@@ -1,9 +1,14 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import * as React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Button, StyleSheet, Text, View} from 'react-native';
 import MapView, {MapMarker, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import {RootStackParamList} from '../navigation/RootStack';
+import {useAppDispatch} from '../state/hooks';
+import {
+  acceptRideRequest,
+  declineRideRequest,
+} from '../state/ride-requests/rideRequestSlice';
 import {useRideRequests} from './hooks/useRideRequests';
 
 const {EXPO_PUBLIC_GOOGLE_MAPS_APIKEY} = process.env;
@@ -11,6 +16,7 @@ const {EXPO_PUBLIC_GOOGLE_MAPS_APIKEY} = process.env;
 type Props = NativeStackScreenProps<RootStackParamList, 'RideDetail'>;
 
 export const RideRequestScreen = (prop: Props) => {
+  const dispatch = useAppDispatch();
   const {getRideRequestById} = useRideRequests();
 
   const {rideId} = prop.route.params;
@@ -19,6 +25,14 @@ export const RideRequestScreen = (prop: Props) => {
   const mapRef = React.useRef<MapView | null>(null);
   const pickupRef = React.useRef<MapMarker | null>(null);
   const destinationRef = React.useRef<MapMarker | null>(null);
+
+  const onAcceptButtonPress = () => {
+    dispatch(acceptRideRequest(rideId));
+  };
+
+  const onDeclineButtonPress = () => {
+    dispatch(declineRideRequest(rideId));
+  };
 
   if (!rideRequest) {
     return <Text>{`Failed to load ride details with id: ${rideId}`}</Text>;
@@ -70,6 +84,11 @@ export const RideRequestScreen = (prop: Props) => {
           />
         )}
       </MapView>
+
+      <View style={{flexDirection: 'row', gap: 10, marginTop: 10}}>
+        <Button onPress={onAcceptButtonPress} title="ACCEPT" color={'blue'} />
+        <Button onPress={onDeclineButtonPress} title="DECLINE" color={'red'} />
+      </View>
     </View>
   );
 };
