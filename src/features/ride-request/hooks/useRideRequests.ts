@@ -1,7 +1,11 @@
 import {useAppSelector} from '../../state/hooks';
 import {selectAllRides} from '../../state/ride-requests/rideRequestSlice';
 
-export const useGetAllRideRequests = () => {
+export const useRideRequests = () => {
   const rideRequests = useAppSelector(selectAllRides);
-  return rideRequests;
+
+  const getRideRequestById = (id: string) =>
+    rideRequests.find(ride => ride.id === id);
+
+  return {rideRequests, getRideRequestById};
 };

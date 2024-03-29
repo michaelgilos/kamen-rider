@@ -5,7 +5,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {RootStackParamList} from '../navigation/RootStack';
-import {useGetAllRideRequests} from '../ride-request/hooks/useGetAllRideRequests';
+import {useRideRequests} from '../ride-request/hooks/useRideRequests';
 import {RideRequest} from '../types/RideRequest';
 
 const RideRequestMarkers = ({
@@ -36,7 +36,7 @@ const RideRequestMarkers = ({
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export const HomeScreen = ({navigation}: Props) => {
-  const rideRequests = useGetAllRideRequests();
+  const {rideRequests} = useRideRequests();
 
   const [location, setLocation] = useState<LocationObject | undefined>();
 
