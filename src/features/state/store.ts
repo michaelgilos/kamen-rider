@@ -6,10 +6,11 @@ import {rideRequestsReducer} from './ride-requests/rideRequestSlice';
 export const store = configureStore({
   devTools: __DEV__,
   reducer: {
-    rideRequests: rideRequestsReducer,
+    rideRequest: rideRequestsReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(apiSlice.middleware as any),
+    getDefaultMiddleware().concat(apiSlice.middleware),
 });
 
 setupListeners(store.dispatch);

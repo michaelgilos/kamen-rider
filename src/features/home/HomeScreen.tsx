@@ -2,7 +2,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import * as Location from 'expo-location';
 import {LocationAccuracy, LocationObject} from 'expo-location';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {RootStackParamList} from '../navigation/RootStack';
 import {useRideRequests} from '../ride-request/hooks/useRideRequests';
@@ -36,7 +36,7 @@ const RideRequestMarkers = ({
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export const HomeScreen = ({navigation}: Props) => {
-  const {pendingRideRequests} = useRideRequests();
+  const {pendingRideRequests, isLoading} = useRideRequests();
 
   const [location, setLocation] = useState<LocationObject | undefined>();
 
@@ -67,6 +67,14 @@ export const HomeScreen = ({navigation}: Props) => {
     return <Text>Failed to load user location</Text>;
   }
 
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size={'large'} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <MapView
@@ -83,7 +91,10 @@ export const HomeScreen = ({navigation}: Props) => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}>
-        <RideRequestMarkers data={pendingRideRequests} onSelect={handleSelectRide} />
+        <RideRequestMarkers
+          data={pendingRideRequests}
+          onSelect={handleSelectRide}
+        />
       </MapView>
     </View>
   );

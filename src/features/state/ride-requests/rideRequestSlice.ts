@@ -58,6 +58,6 @@ export const {
 } = slice.actions;
 
 export const selectAllRides = (state: RootState) =>
-  state.rideRequests.rideRequests;
+  state.rideRequest.rideRequests;
 
 export const {reducer: rideRequestsReducer} = slice;

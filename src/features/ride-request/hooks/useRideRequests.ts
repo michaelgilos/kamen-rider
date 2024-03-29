@@ -3,8 +3,8 @@ import {useAppSelector} from '../../state/hooks';
 import {selectAllRides} from '../../state/ride-requests/rideRequestSlice';
 
 export const useRideRequests = () => {
-  const {data, error, isLoading} = useGetRidesQuery('');
-  console.log({data, error, isLoading});
+  const {isLoading} = useGetRidesQuery('');
+
   const rideRequests = useAppSelector(selectAllRides);
 
   const pendingRideRequests = rideRequests.filter(
@@ -14,5 +14,5 @@ export const useRideRequests = () => {
   const getRideRequestById = (id: string) =>
     rideRequests.find(ride => ride.id === id);
 
-  return {rideRequests, pendingRideRequests, getRideRequestById};
+  return {rideRequests, pendingRideRequests, getRideRequestById, isLoading};
 };
