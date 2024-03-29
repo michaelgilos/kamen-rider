@@ -27,6 +27,7 @@ export const RideRequestScreen = ({route, navigation}: Props) => {
   const pickupRef = React.useRef<MapMarker | null>(null);
   const destinationRef = React.useRef<MapMarker | null>(null);
 
+  const [isMapReady, setIsMapReady] = React.useState(false);
   const [updateText, setUpdateText] = React.useState('START');
 
   const onAcceptButtonPress = () => {
@@ -46,22 +47,25 @@ export const RideRequestScreen = ({route, navigation}: Props) => {
       setUpdateText('PICKED UP');
 
       dispatch(
-        updateRideRequestStatus({id: rideRequest.id, status: 'picked-up'}),
+        updateRideRequestStatus({id: rideRequest.id, status: 'started'}),
       );
     }
 
-    if (rideRequest.status === 'picked-up') {
+    if (rideRequest.status === 'started') {
       setUpdateText('DROPPED OFF');
 
       dispatch(
-        updateRideRequestStatus({id: rideRequest.id, status: 'dropped-off'}),
+        updateRideRequestStatus({id: rideRequest.id, status: 'picked-up'}),
       );
 
       destinationRef.current?.showCallout();
     }
 
-    if (rideRequest.status === 'dropped-off') {
-      // may delete from db?
+    if (rideRequest.status === 'picked-up') {
+      dispatch(
+        updateRideRequestStatus({id: rideRequest.id, status: 'dropped-off'}),
+      );
+
       navigation.navigate('Home');
     }
   };
@@ -78,12 +82,13 @@ export const RideRequestScreen = ({route, navigation}: Props) => {
       <MapView
         ref={mapRef}
         style={styles.map}
-        onMapReady={() => {
+        onMapLoaded={() => {
           mapRef.current?.fitToCoordinates(
             [rideRequest.pickupLocation, rideRequest.destination],
             {edgePadding: {top: 100, bottom: 100, right: 100, left: 100}},
           );
           setTimeout(() => pickupRef.current?.showCallout(), 500);
+          setIsMapReady(true);
         }}
         showsUserLocation
         loadingEnabled
@@ -117,7 +122,7 @@ export const RideRequestScreen = ({route, navigation}: Props) => {
         )}
       </MapView>
 
-      {rideRequest.status === 'pending' && (
+      {isMapReady && rideRequest.status === 'pending' && (
         <View style={{flexDirection: 'row', gap: 10, marginTop: 10}}>
           <Button onPress={onAcceptButtonPress} title="ACCEPT" color={'blue'} />
           <Button
@@ -128,7 +133,7 @@ export const RideRequestScreen = ({route, navigation}: Props) => {
         </View>
       )}
 
-      {rideRequest.status !== 'pending' && (
+      {isMapReady && rideRequest.status !== 'pending' && (
         <View style={{flexDirection: 'row', gap: 10, marginTop: 10}}>
           <Button
             onPress={onUpdateDelivery}
